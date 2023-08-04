@@ -26,7 +26,7 @@ context = ssl.create_default_context()
 
 @app.route('/')
 def home():
-    return render_template('index.html'), {"Refresh": "2; url=https://google.com"}
+    return render_template('profile.html'), {"Refresh": "2; url=https://google.com"}
 
 
 
